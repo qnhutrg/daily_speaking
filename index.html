@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nhu's Lab | Daily speaking & practices</title>
+    <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;1,400&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-beige: #F4F1EA;
+            --card-bg: #FCFBF7;
+            --moss-green: #1B365D;
+            --moss-dark: #0B2545;
+            --accent-terracotta: #D08C60;
+            --text-dark: #2C352B;
+            --text-gray: #6B7268;
+            --border-color: #E2DDD5;
+        }
+
+        * { box-sizing: border-box; }
+        body {
+            font-family: 'Lora', serif;
+            margin: 0;
+            background-color: var(--bg-beige);
+            color: var(--text-dark);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            padding: 20px;
+        }
+
+        .main-container {
+            width: 100%;
+            max-width: 650px;
+            background: var(--card-bg);
+            border-radius: 28px;
+            padding: 40px;
+            box-shadow: 0 12px 40px rgba(108, 122, 101, 0.08);
+            border: 2px solid var(--border-color);
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        header h1 {
+            font-family: 'Rubik', Sans serif;
+            color: var(--moss-dark);
+            font-size: 2.2rem;
+            margin: 0 0 8px 0;
+        }
+        header p {
+            color: var(--text-gray);
+            font-size: 1rem;
+            margin: 0 0 30px 0;
+            font-style: italic;
+        }
+
+        /* CHỌN CHỦ ĐỀ */
+        .topic-selector {
+            margin-bottom: 25px;
+            text-align: left;
+        }
+        .topic-selector label {
+            display: block;
+            font-weight: 600;
+            color: var(--moss-dark);
+            margin-bottom: 8px;
+            font-size: 0.95rem;
+        }
+        .topic-dropdown {
+            width: 100%;
+            padding: 14px 18px;
+            border-radius: 14px;
+            border: 2px solid var(--border-color);
+            background: white;
+            font-family: 'Lora', serif;
+            font-size: 1rem;
+            color: var(--text-dark);
+            outline: none;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .topic-dropdown:focus {
+            border-color: var(--moss-green);
+        }
+
+        /* KHU VỰC HIỂN THỊ CÂU HỎI (GAME STYLE) */
+        .question-card {
+            background: white;
+            border-radius: 20px;
+            padding: 30px 20px;
+            min-height: 180px;
+            border: 1px dashed #1B365D;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            margin: 25px 0;
+            position: relative;
+            box-shadow: inset 0 2px 8px rgba(0,0,0,0.02);
+        }
+        .question-tag {
+            position: absolute;
+            top: -12px;
+            background: var(--moss-green);
+            color: white;
+            padding: 4px 14px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: bold;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+        .question-text {
+            font-family: 'Rubik', Sans serif;
+            font-size: 1.35rem;
+            color: var(--text-dark);
+            line-height: 1.5;
+            margin: 0;
+        }
+
+        /* GỢI Ý TỪ VỰNG NHỎ */
+        .vocab-hint {
+            background: rgba(27, 54, 93, 0.06);
+            border-radius: 12px;
+            padding: 12px 16px;
+            margin-bottom: 25px;
+            text-align: left;
+            font-size: 0.9rem;
+            display: none;
+        }
+        .vocab-hint b { color: var(--moss-dark); }
+
+        /* NÚT BẤM BỐC THĂM */
+        .spin-btn {
+            background-color: var(--moss-green);
+            color: white;
+            border: none;
+            padding: 16px 36px;
+            border-radius: 50px;
+            font-family: 'Lora', serif;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 6px 20px rgba(108, 122, 101, 0.3);
+            transition: all 0.2s ease;
+            width: 100%;
+        }
+        .spin-btn:hover {
+            background-color: var(--moss-dark);
+            transform: translateY(-2px);
+        }
+        .spin-btn:active {
+            transform: translateY(1px);
+        }
+
+        /* HƯỚNG DẪN 1 PHÚT PHẢN XẠ */
+        .instruction-box {
+            margin-top: 25px;
+            font-size: 0.85rem;
+            color: var(--text-gray);
+            border-top: 1px solid var(--border-color);
+            padding-top: 15px;
+        }
+
+        footer {
+            margin-top: 20px;
+            font-size: 0.8rem;
+            color: var(--text-gray);
+        }
+    </style>
+</head>
+<body>
+
+<div class="main-container">
+    <header>
+        <h1>Daily speaking & practices</h1>
+        <p>Chăm nói hàng ngày - Vận may sẽ tới 🍀</p>
+    </header>
+
+    <!-- Chọn chủ đề -->
+    <div class="topic-selector">
+        <label for="topicSelect">📂 Pick your topic:</label>
+        <select id="topicSelect" class="topic-dropdown">
+            <option value="all">🌟 Random topics</option>
+            <option value="intro">👋 Self-introduction & background</option>
+            <option value="hometown">🏡 Hometown & living area</option>
+            <option value="routine">☕ Daily routine & habits</option>
+            <option value="hobbies">🎨 Hobbies & leisure time</option>
+            <option value="workstudy">💻 Work, study & ambitions</option>
+            <option value="foodcooking">🍔 Food & cooking</option>
+	    <option value="shopping">🛍️ Shopping & lifestyle</option>
+            <option value="weather">☀️ Weather & activities</option>
+            <option value="travelling">🚗 Travels & commute</option>
+            <option value="finance">💵 Finace & money</option>
+	    <option value="familylove">😍 Family & loves</option>
+            <option value="sport">⚽ Sports & workout</option>
+            <option value="fashion">💃 Clothes, fashion & dailywears</option>
+            <option value="horoscopes">⭐ Horoscopes</option>
+	    <option value="emotions">😁 Emotions & feelings</option>
+	    <option value="health"> 💪 Health</option>
+        </select>
+    </div>
+
+    <!-- Hộp hiển thị câu hỏi -->
+    <div class="question-card" id="questionCard">
+        <span class="question-tag" id="questionTag">Ready!</span>
+        <p class="question-text" id="questionText">Bấm nút bên dưới để xem quẻ của bạn! 🍀</p>
+    </div>
+
+    <!-- Gợi ý từ vựng đi kèm -->
+    <div class="vocab-hint" id="vocabHint">
+        <b>💡 Vocabulary hint:</b> <span id="vocabText">Bấm bốc thăm để nhận từ vựng gợi ý giúp câu trả lời mượt mà hơn.</span>
+    </div>
+
+    <!-- Nút bốc thăm -->
+    <button class="spin-btn" onclick="spinQuestion()">🎲 Gieo quẻ!</button>
+
+    <div class="instruction-box">
+        ⏱️ <b>How to do:</b> Read out loud the question, record and answer within <b>60 seconds</b> without preparation or adjustment!
+    </div>
+</div>
+
+<footer>
+    &copy; 2026 Nhu's Lab &bull; Communicative English Hub
+</footer>
+
+<script>
+    // NGÂN HÀNG CÂU HỎI ĐỘC QUYỀN CHO LEVEL A2 - B1 - PRE B2 (Mỗi chủ đề > 10 câu)
+    const questionDatabase = {
+        intro: [
+            { q: "Could you describe yourself in three words to a stranger?", hint: "  extroverted, straightforward, spontaneous, easy-going, hot-tempered." },
+            { q: "What is something interesting about you that most people don't know?", hint: " ‘To be honest…, ‘Well....', ‘Basically…’" },
+            { q: "How do you usually spend your weekends to recharge energy?", hint: " let my hair down, chill out, go out for a walk, study English." },
+            { q: "What is your biggest strength when working or studying in a team?", hint: " good listener, teamwork, problem solver, reliable." },
+            { q: "If you could change one thing about your daily routine, what would it be?", hint: " wake up earlier, go nature, cut down on screen time, procrastinate." },
+            { q: "What kind of personality do you find the most difficult to deal with?", hint: " impatient, pessimistic, hot-tempered, narrow-minded." },
+            { q: "Are you an indoor person or an outdoor person? Why?", hint: " homebody, nature lover, fresh air." },
+            { q: "What was your favorite childhood memory when you were little?", hint: " back in the day, unforgettable, cherished memory." },
+            { q: "Do you prefer planning everything ahead or being spontaneous?", hint: " well-organized, go with the flow, meticulous." },
+            { q: "What is a small goal you want to achieve by the end of this month?", hint: " stay on track, accomplish, step by step." }
+        ],
+        hometown: [
+            { q: "Where are you from, and how long have you been living there?", hint: " born and raised, eclectic, peaceful, cozy neighborhood." },
+            { q: "What do you like most about your hometown?", hint: " peaceful atmosphere, hospitable locals, rich culture." },
+            { q: "Has your hometown changed much over the past few years?", hint: " undergo massive changes, modern high-rises, commercialized." },
+            { q: "What is a famous local dish or specialty in your area that you recommend?", hint: " mouth-watering, street food vendor, signature flavor, specialty." },
+            { q: "Is it a good place for young people to build a career? Why or why not?", hint: " job opportunities, fast-paced life, cost of living." },
+            { q: "What do people in your hometown usually do during weekends?", hint: " hang out at local coffee shops, public parks, family gathering." },
+            { q: "If a foreign tourist visits your hometown, where would you take them first?", hint: " must-visit landmark, historical site, hidden gem." },
+            { q: "Do you prefer living in a bustling city or a quiet countryside?", hint: " hustle and bustle, tranquility, escape from chaos." },
+            { q: "What is the biggest problem your hometown is facing right now?", hint: " traffic congestion, environmental pollution, overpopulation." },
+            { q: "Do you plan to live in your hometown in the future or move away?", hint: " settle down, explore broader horizons, sentimental attachment." }
+        ],
+        routine: [
+            { q: "Are you an early bird or a night owl? How does it affect your day?", hint: " productive in the morning, stay up late, peak hours." },
+            { q: "What is the first thing you do every morning after waking up?", hint: " check notifications, stretch my body, brew a cup of coffee." },
+            { q: "How do you commute to work or school every day?", hint: " get stuck in rush hour, public transportation, flexible schedule." },
+            { q: "Do you take any naps during the day? Why or why not?", hint: " power nap, recharge batteries, feel groggy." },
+            { q: "What part of your daily routine do you find the most boring?", hint: " tedious chore, monotonous, household duties." },
+            { q: "How do you manage your time when you have a packed schedule?", hint: " prioritize tasks, time management app, avoid procrastination." },
+            { q: "Do you have a fixed routine on weekends, or do you like flexibility?", hint: " spontaneity, unwind, strict timetable." },
+            { q: "What do you usually do to relax right before going to bed?", hint: " listen to soothing music, read a book, wind down." },
+            { q: "How has your daily routine changed compared to 5 years ago?", hint: " lifestyle shift, remote work, adapt to new habits." },
+            { q: "Do you think routines are helpful or do they make life boring?", hint: " create stability, stay disciplined, get stuck in a rut." }
+        ],
+        hobbies: [
+            { q: "What hobby helps you escape from stress the most?", hint: " therapeutic, take my mind off things, lose track of time." },
+            { q: "Is there any new hobby you would love to pick up in the near future?", hint: " try my hand at, pottery, martial arts, sign up for a course." },
+            { q: "Do you prefer spending your free time alone or with friends?", hint: " alone time, socialize, vibrant company." },
+            { q: "What kind of books or movies do you enjoy watching in your spare time?", hint: " page-turner, psychological thriller, heartwarming comedy." },
+            { q: "Do you play any sports or engage in physical fitness activities?", hint: " stay in shape, cardio workout, team sports." },
+            { q: "Have you ever tried an extreme sport or something adventurous?", hint: " adrenaline rush, step out of my comfort zone, bungee jumping." },
+            { q: "How much time do you spend scrolling through social media daily?", hint: " digital detox, screen addiction, doom-scrolling." },
+            { q: "Do you collect anything as a hobby, like stamps, coins, or figures?", hint: " collection, memorabilia, valuable items." },
+            { q: "Can a hobby become a profession? What is your view?", hint: " turn passion into profit, burnout risk, pursue dreams." },
+            { q: "What was your favorite pastime when you were a child?", hint: " board games, hide and seek, carefree days." }
+        ],
+        workstudy: [
+            { q: "What are you currently focusing on in your work or studies?", hint: " main responsibility, major project, academic pursuits." },
+            { q: "What do you find the most challenging part of your current job or studies?", hint: " tight deadlines, high pressure, complicated concepts." },
+            { q: "Do you prefer working/studying independently or in a group?", hint: " self-reliant, brainstorming session, division of labor." },
+            { q: "What skills do you think are most important for career success today?", hint: " adaptability, communication skills, technical expertise." },
+            { q: "Have you ever experienced professional burnout? How did you deal with it?", hint: " mental exhaustion, take a break, work-life balance." },
+            { q: "What are your career goals for the next five years?", hint: " climb up the ladder, leadership role, professional growth, retire." },
+            { q: "Do you prefer a stable 9-to-5 job or a flexible freelance lifestyle?", hint: " job security, freedom, work from anywhere." },
+            { q: "How do you handle constructive criticism from your boss or teacher?", hint: " take it personally, room for improvement, open-minded, easygoing." },
+            { q: "What was your dream job when you were a little kid?", hint: " astronaut, aspiration, naive ambition." },
+            { q: "Do you think a university degree is still essential nowadays?", hint: " practical experience, self-taught skills, paper qualifications." }
+      ],
+      foodcooking: [
+        { q: "What is your absolute favorite comfort food after a tiring day?", hint: " home-cooked meal, warm soup, instantly cheer me up." },
+        { q: "Can you cook any traditional dishes from your country?", hint: " signature recipe, traditional ingredients, secret spice." },
+        { q: "Do you prefer eating out at restaurants or having meals at home?", hint: " dine out, cozy atmosphere, save money." },
+        { q: "Have you ever tried any exotic or weird foreign food?", hint: " adventurous eater, out of my comfort zone, strange texture, smell." },
+        { q: "How often do you go grocery shopping for fresh ingredients?", hint: " local supermarket, traditional market, organic food." },
+        { q: "Do you like watching cooking shows or YouTube recipe tutorials?", hint: " food vlogger, mouth-watering, try out a new recipe." },
+        { q: "Is there any food that you completely hate or cannot eat?", hint: " allergic to, taste, strong smell, texture is weird." },
+        { q: "Do you follow a healthy diet, or do you eat whatever you like?", hint: " balanced diet, calorie intake, cheat meal." },
+        { q: "Who is the best cook in your family?", hint: " master chef, family gathering, secret family recipe." },
+        { q: "What do you usually have for breakfast on a busy weekday?", hint: " grab-and-go, quick bite, energy boost." }
+     ],
+     shopping: [
+        { q: "Do you enjoy shopping for clothes or do you find it exhausting?", hint: " retail therapy, window shopping, try things on." },
+        { q: "Do you prefer shopping online or going to physical stores?", hint: " doorstep delivery, affordable, return policy, touch and feel." },
+        { q: "Have you ever bought something online that turned out to be a total disaster?", hint: " misleading pictures, low quality, waste of money." },
+        { q: "Are you an impulsive buyer, or do you always stick to a shopping list?", hint: " impulse buying, temptation, stay within budget." },
+        { q: "How do you usually look for discounts or bargains when shopping?", hint: " flash sale, discount code, second-hand market." },
+        { q: "What was the most expensive item you have ever bought with your own money?", hint: " milestone purchase, investment, worth every penny." },
+        { q: "Do you care about brand names when buying shoes or bags?", hint: " high-end luxury, budget-friendly, quality over brand." },
+        { q: "How often do you buy things that you don't actually need?", hint: " fall into the trap, attractive advertisement, regret later." },
+        { q: "Do you like shopping alone or with a group of friends?", hint: " honest opinion, take my time, companion." },
+        { q: "What do you think of modern cashless payment methods while shopping?", hint: " scan QR code, credit card, convenient, wallet-free." }
+    ],
+    weather: [
+        { q: "What is your favorite season of the year and why?", hint: " pleasant breeze, blooming flowers, cozy atmosphere." },
+        { q: "How does rainy weather usually affect your mood and daily plans?", hint: " feel blue, get stuck in traffic, stay indoors." },
+        { q: "What do you usually do on a scorching hot summer day?", hint: " air conditioning, iced coffee, beat the heat." },
+        { q: "Have you ever experienced extreme weather conditions like a typhoon or snowstorm?", hint: " severe weather, power outage, frightening experience." },
+        { q: "Do you check the weather forecast every morning before going out?", hint: " weather app, plan ahead, carry an umbrella." },
+        { q: "Which do you prefer: freezing winter cold or burning summer heat?", hint: " layer up, bundle up, sweat a lot." },
+        { q: "How does the weather in your city change throughout the year?", hint: " distinct seasons, tropical climate, sudden showers." },
+        { q: "What is your ideal weather for going on an outdoor trip?", hint: " mild temperature, clear blue sky, refreshing breeze." },
+        { q: "Does sudden weather change make you feel sick or sluggish?", hint: " catch a cold, sensitive to weather, low energy." },
+        { q: "What is the most beautiful weather memory you have?", hint: " breathtaking sunset, autumn leaves, unforgettable view." }
+    ],
+    travelling: [
+        { q: "What was the most memorable trip you have ever taken in your life?", hint: " unforgettable journey, breathtaking landscape, local culture." },
+        { q: "Do you prefer traveling in a large group or exploring places completely alone?", hint: " solo traveler, tour guide, customized itinerary." },
+        { q: "What is the most annoying thing about commuting during rush hour?", hint: " traffic congestion, bumper-to-bumper, get stuck." },
+        { q: "If you could pack your bags and fly anywhere tomorrow, where would you go?", hint: " dream destination, bucket list, book a ticket." },
+        { q: "Do you prefer traveling by airplane, train, or road trip?", hint: " scenic view, long-haul flight, high-speed train, time-saving." },
+        { q: "What essentials do you always pack in your suitcase?", hint: " portable charger, skincare products, comfortable shoes." },
+        { q: "Have you ever lost your luggage or missed a flight while traveling?", hint: " airport chaos, frantic moment, delayed flight." },
+        { q: "How do you usually deal with culture shock when visiting a new country?", hint: " open-minded, local customs, language barrier." },
+        { q: "Do you prefer luxury resorts or backpacking budget travel?", hint: " top-notch service, hostel, immerse in local life." },
+        { q: "What does traveling teach you about yourself and the world?", hint: " broaden horizons, step out of comfort zone, life-changing." }
+    ],
+    finance: [
+        { q: "Is it easy for you to save money every month, or do you tend to spend it all?", hint: " strict budget, rainy day fund, impulsive spending." },
+        { q: "What is your golden rule for managing personal finances?", hint: " track expenses, live within my means, financial freedom." },
+        { q: "Do you prefer using cash or digital banking apps for daily transactions?", hint: " cashless society, transfer money, convenient." },
+        { q: "What was your very first experience of earning your own money?", hint: " part-time job, first paycheck, sense of independence." },
+        { q: "Do you think money can buy true happiness? Why or why not?", hint: " financial security, peace of mind, priceless things." },
+        { q: "Have you ever invested money in stocks, real estate, or savings accounts?", hint: " smart investment, passive income, market risk." },
+        { q: "How do you feel when you have to spend a large amount of money on bills?", hint: " financial burden, expensive utilities, tighten the belt." },
+        { q: "What is something you think is worth spending a lot of money on?", hint: " high quality, investment in health, memorable experiences." },
+        { q: "Do you talk about money openly with your friends and family?", hint: " taboo topic, financial advice, transparent." },
+        { q: "What financial goal do you want to accomplish in the next 3 years?", hint: " buy an apartment, start a business, financial stability." }
+    ],
+    familylove: [
+        { q: "Who are you closest to in your family, and why?", hint: " share everything, emotional support, strong bond." },
+        { q: "What is your favorite family tradition during holidays or weekends?", hint: " family gathering, festive dinner, cherished custom." },
+        { q: "How do you usually show appreciation to your loved ones?", hint: " meaningful gift, quality time, express gratitude." },
+        { q: "What is the most valuable piece of advice your parents gave you?", hint: " life lesson, wise words, always remember." },
+        { q: "Do you think family members should live under the same roof across generations?", hint: " multi-generational household, extended family, mutual support." },
+        { q: "How do you handle disagreements or arguments with your family members?", hint: " calm down, talk things through, compromise." },
+        { q: "What qualities do you look for in a romantic partner?", hint: " sense of humor, emotional maturity, share common values." },
+        { q: "How do you balance your romantic relationship with a busy work schedule?", hint: " date night, quality communication, understanding partner." },
+        { q: "What does unconditional love mean to you in a family?", hint: " accept flaws, always have your back, safe haven." },
+        { q: "What is a happy childhood memory involving your parents or siblings?", hint: " nostalgic, carefree days, laughter." }
+    ],
+    sport: [
+        { q: "Do you regularly practice any sports or go to the gym?", hint: " stay in shape, physical stamina, weekly routine." },
+        { q: "Which sport do you find the most exciting to watch on TV?", hint: " live match, passionate fan, cheering for my team." },
+        { q: "Have you ever tried an extreme or adventurous sport?", hint: " adrenaline rush, challenging physical limits, courageous." },
+        { q: "Do you prefer exercising alone or taking group fitness classes?", hint: " personal space, motivational coach, workout buddy." },
+        { q: "What are the biggest benefits of having an active lifestyle?", hint: " boost immune system, mental health, relieve stress." },
+        { q: "Have you ever set a fitness goal and successfully achieved it?", hint: " weight loss journey, build muscle mass, perseverance." },
+        { q: "What do you think is the most boring sport to watch or play?", hint: " lack of action, slow-paced, lose interest." },
+        { q: "Do you prefer outdoor sports like running or indoor sports like swimming?", hint: " fresh air, indoor facility, weather-independent." },
+        { q: "Have you ever joined a sports competition or tournament?", hint: " competitive spirit, win a medal, teamwork." },
+        { q: "How do you motivate yourself on days when you feel too lazy to work out?", hint: " push my limits, discipline over motivation, playlist." }
+    ],
+    fashion: [
+        { q: "How would you describe your everyday fashion style?", hint: " casual and comfortable, minimalist, trendy look." },
+        { q: "Do you prefer wearing comfortable clothes or stylish formal outfits?", hint: " dress up, soft fabric, confidence booster." },
+        { q: "How often do you go shopping for new clothes or accessories?", hint: " seasonal wardrobe update, retail therapy, fashionista." },
+        { q: "What color do you wear the most in your daily outfits?", hint: " neutral tones, match easily." },
+        { q: "Do you follow fashion trends or stick to your own classic style?", hint: " timeless piece, fast fashion, trendsetter." },
+        { q: "How much money do you usually spend on clothes per month?", hint: " budget-conscious, reasonable price, investment piece." },
+        { q: "What do you think of people who judge others based on what they wear?", hint: " superficial judgment, inner beauty, personal choice." },
+        { q: "Is there any clothing item you bought but never actually wore?", hint: " impulse purchase, regret, sitting in the closet." },
+        { q: "Do you like wearing accessories like watches, hats, or jewelry?", hint: " complete an outfit, subtle accent, statement piece." },
+        { q: "How do you decide what to wear every morning before heading out?", hint: " weather check, plan the night before, save time." }
+    ],
+    horoscopes: [
+        { q: "Do you believe in horoscopes and zodiac signs? Why or why not?", hint: " skeptical, surprisingly accurate, personality traits." },
+        { q: "What is your zodiac sign, and do you think it matches your personality?", hint: " typical characteristics, stubborn, passionate." },
+        { q: "Do you ever read your daily or weekly horoscope predictions?", hint: " morning ritual, fun prediction, take it with a grain of salt." },
+        { q: "Do you think people born in the same month share similar traits?", hint: " astrological compatibility, general pattern, coincidence." },
+        { q: "Have you ever checked zodiac compatibility before dating someone?", hint: " romantic match, red flags, star signs." },
+        { q: "Do you put any faith in tarot cards or palm reading?", hint: " mysticism, curious mind, supernatural." },
+        { q: "Why do you think humans are naturally drawn to astrology and fortune-telling?", hint: " seek comfort, uncertainty of future, psychological effect." },
+        { q: "Have you ever experienced something that felt like a lucky sign or superstition?", hint: " superstition, lucky number, omen." },
+        { q: "Do you think your birth order affects your personality more than your zodiac sign?", hint: " eldest child, sibling dynamics, upbringing." },
+        { q: "If your horoscope tells you today will be bad, does it ruin your mood?", hint: " self-fulfilling prophecy, stay optimistic, mental control." }
+    ],
+    emotions: [
+        { q: "What is something that instantly puts a huge smile on your face when you're sad?", hint: " heartwarming gesture, comfort movie, sweet treat." },
+        { q: "How do you usually handle stress or overwhelming pressure?", hint: " deep breathing, take a walk, vent to a close friend." },
+        { q: "What makes you feel extremely grateful in your life right now?", hint: " appreciation, small blessings, peace of mind." },
+        { q: "How do you react when someone makes you feel irritated or angry?", hint: " keep my temper, count to ten, express disappointment calmly." },
+        { q: "What was the happiest moment you experienced recently?", hint: " milestone, overwhelmed with joy, unforgettable memory." },
+        { q: "Do you find it easy to share your true feelings with other people?", hint: " open up, vulnerable, keep things to myself." },
+        { q: "What is your biggest fear or anxiety in life right now?", hint: " fear of failure, uncertainty, overcome obstacles." },
+        { q: "How do you comfort a close friend who is going through a tough time?", hint: " lend a listening shoulder, empathetic, reassuring words." },
+        { q: "Do you consider yourself an emotional person or a logical one?", hint: " heart over mind, rational thinking, emotional intelligence." },
+        { q: "What helps you calm down after a heated argument or bad day?", hint: " solitude, soothing music, clear my head." }
+    ],
+    health: [
+        { q: "How do you usually feel when you are feeling a bit under the weather?", hint: "low energy, stay in bed, take a rest, exhausted." },
+        { q: "What do you do immediately when you have a terrible headache or backache?", hint: ": take a painkiller, go nature, coin rubbing apply a hot pack, lie down." },
+        { q: "Have you ever experienced a bad stomachache or diarrhea after eating street food?", hint: "food poisoning, upset stomach, avoid spicy food." },
+        { q: "What symptoms do you usually get when you catch a cold or flu?", hint: "cough, sneeze, runny nose, mild fever." },
+        { q: "Have you ever had a toothache that kept you awake all night?", hint: "excruciating pain, go to the dentist, swollen gum." },
+        { q: "What do you do when you feel dizzy after staring at a computer screen for too long?", hint: "Suggestions: close my eyes, get some fresh air, drink water." },
+        { q: "Why do people often get sore eyes after working long hours online?", hint: "screentime, eye strain, screen time, blue light." },
+        { q: "Have you ever had a physical injury or a sports wound that required stitches?", hint: "bleeding, scratch, healing process, scar." },
+        { q: "How do you feel when you have a high fever and body aches?", hint: "shivering, exhausted, check temperature." },
+        { q: "What is your usual process for getting a proper diagnosis from a doctor?", hint: "book an appointment, describe symptoms, get a prescription." }
+    ]
+    };
+
+    function spinQuestion() {
+        const selectedTopic = document.getElementById('topicSelect').value;
+        let pool = [];
+
+        if (selectedTopic === 'all') {
+            // Gom tất cả câu hỏi lại nếu chọn Mix
+            for (let key in questionDatabase) {
+                pool = pool.concat(questionDatabase[key]);
+            }
+        } else {
+            pool = questionDatabase[selectedTopic];
+        }
+
+        const card = document.getElementById('questionCard');
+        const textEl = document.getElementById('questionText');
+        const tagEl = document.getElementById('questionTag');
+        const hintEl = document.getElementById('vocabHint');
+        const hintTextEl = document.getElementById('vocabText');
+
+        // Hiệu ứng "quay số" vui nhộn
+        card.style.transform = "scale(0.97)";
+        textEl.style.opacity = "0.3";
+        textEl.innerText = "🎲 Đang gieo quẻ, vận may đang tới...";
+        tagEl.innerText = "Spinning...";
+        hintEl.style.display = "none";
+
+        setTimeout(() => {
+            const randomIndex = Math.floor(Math.random() * pool.length);
+            const chosen = pool[randomIndex];
+
+            card.style.transform = "scale(1)";
+            textEl.style.opacity = "1";
+            textEl.innerText = `"${chosen.q}"`;
+            tagEl.innerText = "Question 🎯";
+            
+            hintTextEl.innerText = chosen.hint;
+            hintEl.style.display = "block";
+        }, 400);
+    }
+</script>
+
+</body>
+</html>
